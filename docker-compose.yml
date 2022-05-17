@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  tidal-utils:
+    container_name: tidal-utils
+    image: zibbp/tidal-utils
+    volumes:
+      - ./test:/data
+      # Uncomment the below if you would like to use a custom start.sh script
+      #- ./exec:/exec
