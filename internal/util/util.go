@@ -6,6 +6,7 @@ import (
 
 	"github.com/flytam/filenamify"
 	"github.com/zibbp/tidal-utils/internal/file"
+	"github.com/zibbp/tidal-utils/internal/navidrome"
 	"github.com/zibbp/tidal-utils/internal/tidal"
 	spotifyPkg "github.com/zmb3/spotify/v2"
 )
@@ -64,4 +65,23 @@ func ProcessMissingTracks(tracks []spotifyPkg.PlaylistTrack, playlistName string
 	}
 	return nil
 
+}
+
+func TidalPlaylistToNavidromePlaylist(tidalPlaylist tidal.Playlist) error {
+	var navidromePlaylist navidrome.Playlist
+	for _, track := range tidalPlaylist.Tracks {
+		navidromeTrack := navidrome.Track{
+			Title:  track.Title,
+			Artist: track.Artist.Name,
+			Album:  track.Album.Title,
+		}
+		navidromePlaylist.Tracks = append(navidromePlaylist.Tracks, navidromeTrack)
+	}
+	navidromePlaylist.Name = tidalPlaylist.Title
+	navidromePlaylist.ID = tidalPlaylist.UUID
+	err := file.WriteNavidromePlaylist(navidromePlaylist)
+	if err != nil {
+		return err
+	}
+	return nil
 }

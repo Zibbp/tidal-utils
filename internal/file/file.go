@@ -8,7 +8,9 @@ import (
 	"os"
 
 	log "github.com/sirupsen/logrus"
+	"github.com/zibbp/tidal-utils/internal/navidrome"
 	"github.com/zibbp/tidal-utils/internal/tidal"
+
 	spotifyPkg "github.com/zmb3/spotify/v2"
 )
 
@@ -39,6 +41,13 @@ func Initialize() {
 			log.Println(err)
 		}
 	}
+	navidrome := "/data/navidrome"
+	if _, err := os.Stat(navidrome); errors.Is(err, os.ErrNotExist) {
+		err := os.Mkdir(navidrome, os.ModePerm)
+		if err != nil {
+			log.Println(err)
+		}
+	}
 	spotifyPlaylists := "/data/spotify/playlists"
 	if _, err := os.Stat(spotifyPlaylists); errors.Is(err, os.ErrNotExist) {
 		err := os.Mkdir(spotifyPlaylists, os.ModePerm)
@@ -49,6 +58,13 @@ func Initialize() {
 	tidalPlaylists := "/data/tidal/playlists"
 	if _, err := os.Stat(tidalPlaylists); errors.Is(err, os.ErrNotExist) {
 		err := os.Mkdir(tidalPlaylists, os.ModePerm)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	navidromePlaylists := "/data/navidrome/playlists"
+	if _, err := os.Stat(navidromePlaylists); errors.Is(err, os.ErrNotExist) {
+		err := os.Mkdir(navidromePlaylists, os.ModePerm)
 		if err != nil {
 			log.Println(err)
 		}
@@ -102,6 +118,20 @@ func WriteUserTidalPlaylist(playlist tidal.Playlist) error {
 		return err
 	}
 	err = WriteJson(data, "/data/tidal/playlists", fmt.Sprintf("%s.json", playlist.UUID))
+	if err != nil {
+		log.Fatalf("Error writing playlist to file %w", err)
+		return err
+	}
+	return nil
+}
+
+func WriteNavidromePlaylist(playlist navidrome.Playlist) error {
+	data, err := json.Marshal(playlist)
+	if err != nil {
+		log.Fatalf("Error marshalling playlist %w", err)
+		return err
+	}
+	err = WriteJson(data, "/data/navidrome/playlists", fmt.Sprintf("%s.json", playlist.ID))
 	if err != nil {
 		log.Fatalf("Error writing playlist to file %w", err)
 		return err

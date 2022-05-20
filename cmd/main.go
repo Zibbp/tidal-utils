@@ -123,6 +123,11 @@ func spotifyToTidal(spotifyService *spotify.Service, tidalSerivce *tidal.Service
 		if err != nil {
 			log.Errorf("Error writing Tidal playlist %s to local file: %w", playlist.Tidal.Title, err)
 		}
+		// Write tidal playlist to Navidrome playlist
+		err = util.TidalPlaylistToNavidromePlaylist(playlist.Tidal)
+		if err != nil {
+			log.Errorf("Error writing Tidal playlist %s to Navidrome playlist: %w", playlist.Tidal.Title, err)
+		}
 	}
 
 }
