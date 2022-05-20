@@ -1,6 +1,7 @@
 package file
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -98,7 +99,7 @@ func WriteJson(data []byte, path string, fileName string) error {
 	return nil
 }
 func WriteUserSpotifyPlaylist(playlist spotifyPkg.FullPlaylist) error {
-	data, err := json.Marshal(playlist)
+	data, err := JSONMarshal(playlist)
 	if err != nil {
 		log.Fatalf("Error marshalling playlist %w", err)
 		return err
@@ -112,7 +113,7 @@ func WriteUserSpotifyPlaylist(playlist spotifyPkg.FullPlaylist) error {
 }
 
 func WriteUserTidalPlaylist(playlist tidal.Playlist) error {
-	data, err := json.Marshal(playlist)
+	data, err := JSONMarshal(playlist)
 	if err != nil {
 		log.Fatalf("Error marshalling playlist %w", err)
 		return err
@@ -126,7 +127,7 @@ func WriteUserTidalPlaylist(playlist tidal.Playlist) error {
 }
 
 func WriteNavidromePlaylist(playlist navidrome.Playlist) error {
-	data, err := json.Marshal(playlist)
+	data, err := JSONMarshal(playlist)
 	if err != nil {
 		log.Fatalf("Error marshalling playlist %w", err)
 		return err
@@ -137,4 +138,13 @@ func WriteNavidromePlaylist(playlist navidrome.Playlist) error {
 		return err
 	}
 	return nil
+}
+
+// JSONMarshal is a wrapper for json.Marshal which does not escape unicode characters (&)
+func JSONMarshal(t interface{}) ([]byte, error) {
+	buffer := &bytes.Buffer{}
+	encoder := json.NewEncoder(buffer)
+	encoder.SetEscapeHTML(false)
+	err := encoder.Encode(t)
+	return buffer.Bytes(), err
 }
