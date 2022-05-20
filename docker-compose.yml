@@ -2,8 +2,8 @@ version: '3.3'
 services:
   tidal-utils:
     container_name: tidal-utils
-    image: zibbp/tidal-utils
+    image: ghcr.io/zibbp/tidal-utils:latest
     volumes:
-      - ./test:/data
+      - ./data:/data
       # Uncomment the below if you would like to use a custom start.sh script
       #- ./exec:/exec
