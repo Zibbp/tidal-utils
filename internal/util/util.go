@@ -55,7 +55,7 @@ func ProcessMissingTracks(tracks []spotifyPkg.PlaylistTrack, playlistName string
 	if err != nil {
 		return err
 	}
-	fileName, err := filenamify.FilenamifyV2(fmt.Sprintf("%s.json", playlistName))
+	fileName, err := filenamify.Filenamify(fmt.Sprintf("%s.json", playlistName), filenamify.Options{Replacement: "-"})
 	if err != nil {
 		return err
 	}

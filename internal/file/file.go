@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/flytam/filenamify"
 	log "github.com/sirupsen/logrus"
 	"github.com/zibbp/tidal-utils/internal/navidrome"
 	"github.com/zibbp/tidal-utils/internal/tidal"
@@ -99,12 +100,14 @@ func WriteJson(data []byte, path string, fileName string) error {
 	return nil
 }
 func WriteUserSpotifyPlaylist(playlist spotifyPkg.FullPlaylist) error {
+	fileName, err := filenamify.Filenamify(fmt.Sprintf("%s.json", playlist.Name), filenamify.Options{Replacement: "-"})
+
 	data, err := JSONMarshal(playlist)
 	if err != nil {
 		log.Fatalf("Error marshalling playlist %w", err)
 		return err
 	}
-	err = WriteJson(data, "/data/spotify/playlists", fmt.Sprintf("%s.json", playlist.ID))
+	err = WriteJson(data, "/data/spotify/playlists", fileName)
 	if err != nil {
 		log.Fatalf("Error writing playlist to file %w", err)
 		return err
@@ -113,12 +116,14 @@ func WriteUserSpotifyPlaylist(playlist spotifyPkg.FullPlaylist) error {
 }
 
 func WriteUserTidalPlaylist(playlist tidal.Playlist) error {
+	fileName, err := filenamify.Filenamify(fmt.Sprintf("%s.json", playlist.Title), filenamify.Options{Replacement: "-"})
+
 	data, err := JSONMarshal(playlist)
 	if err != nil {
 		log.Fatalf("Error marshalling playlist %w", err)
 		return err
 	}
-	err = WriteJson(data, "/data/tidal/playlists", fmt.Sprintf("%s.json", playlist.UUID))
+	err = WriteJson(data, "/data/tidal/playlists", fileName)
 	if err != nil {
 		log.Fatalf("Error writing playlist to file %w", err)
 		return err
@@ -127,12 +132,14 @@ func WriteUserTidalPlaylist(playlist tidal.Playlist) error {
 }
 
 func WriteNavidromePlaylist(playlist navidrome.Playlist) error {
+	fileName, err := filenamify.Filenamify(fmt.Sprintf("%s.json", playlist.Name), filenamify.Options{Replacement: "-"})
+
 	data, err := JSONMarshal(playlist)
 	if err != nil {
 		log.Fatalf("Error marshalling playlist %w", err)
 		return err
 	}
-	err = WriteJson(data, "/data/navidrome/playlists", fmt.Sprintf("%s.json", playlist.ID))
+	err = WriteJson(data, "/data/navidrome/playlists", fileName)
 	if err != nil {
 		log.Fatalf("Error writing playlist to file %w", err)
 		return err
