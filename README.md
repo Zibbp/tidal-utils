@@ -12,7 +12,7 @@
 2. The container will provide a tidal oauth URL. Follow that and grant access to the application.
     1. Once authenticaed with Tidal the container will error due to missing Spotify credentials.
 3. Create a [Spotify Application](https://developer.spotify.com/dashboard/applications) and fill in the spotify section in the config file.
-4. In the `/data` folder create a file named `playlists.json` in the `/data/playlists` folder and enter Spotify playlists in the following format
+4. Create a file named `playlists.json` in the `/data/spotify/` folder and enter Spotify playlists in the following format
 
 ```json
 {
