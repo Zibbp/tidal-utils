@@ -11,8 +11,6 @@ RUN apk add --no-cache bash curl
 
 COPY --from=builder /app .
 
-COPY start.sh /exec/start.sh
+RUN chmod +x app
 
-RUN chmod +x /exec/start.sh && chmod +x app
-
-CMD ["./exec/start.sh"]
+CMD ["./app"]

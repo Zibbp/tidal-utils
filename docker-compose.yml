@@ -5,5 +5,3 @@ services:
     image: ghcr.io/zibbp/tidal-utils:latest
     volumes:
       - ./data:/data
-      # Uncomment the below if you would like to use a custom start.sh script
-      #- ./exec:/exec

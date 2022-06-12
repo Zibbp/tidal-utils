@@ -1,0 +1,12 @@
+{
+  "debug": false,
+  "spotify": {
+    "client_id": "",
+    "client_secret": ""
+  },
+  "tidal": {
+    "access_token": "",
+    "refresh_token": "",
+    "user_id": ""
+  }
+}
