@@ -44,13 +44,38 @@ func main() {
 }
 
 func spotifyToTidal(spotifyService *spotify.Service, tidalSerivce *tidal.Service) {
-	// Get local user playlists
-	spotifyPlaylistsJson, err := file.GetUserSpotifyPlaylists()
-	if err != nil {
-		log.Errorf("Error reading local Spotify playlists: %w", err)
+
+	manual := viper.Get("manual").(bool)
+
+	var spotPlaylists file.UserSpotifyPlaylists
+
+	// Check if manual mode is set to true.
+	// Manual mode: User manually adds Spotify playlist IDs to playlists.json
+	// User mode: User's own/liked Spotify playlists are auto added
+	if manual == true {
+		log.Info("Manual mode enabled.")
+		// Get local user playlists
+		spotifyPlaylistsJson, err := file.GetUserSpotifyPlaylists()
+		if err != nil {
+			log.Errorf("Error reading local Spotify playlists: %w", err)
+		}
+		spotPlaylists = spotifyPlaylistsJson
+	} else {
+		log.Info("User mode enabled.")
+		var userSpotifyPlaylists file.UserSpotifyPlaylists
+		usrPlaylists, err := spotifyService.GetUsersPlaylists()
+		if err != nil {
+			log.Errorf("Couldn't get user playlists: %v", err)
+			return
+		}
+		for _, playlist := range usrPlaylists {
+			userSpotifyPlaylists.Playlists = append(userSpotifyPlaylists.Playlists, string(playlist.ID))
+		}
+		spotPlaylists = userSpotifyPlaylists
 	}
+
 	// Fetch Spotify playlist information
-	spotifyPlaylists, err := spotifyService.GetPlaylists(spotifyPlaylistsJson)
+	spotifyPlaylists, err := spotifyService.GetPlaylists(spotPlaylists)
 	if err != nil {
 		log.Errorf("Error fetching Spotify playlists: %w", err)
 	}

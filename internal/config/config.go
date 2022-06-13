@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 
@@ -11,9 +12,15 @@ import (
 
 type Conf struct {
 	Debug   bool
+	Manual  bool
 	Spotify struct {
 		ClientID     string
 		ClientSecret string
+		AccessToken  string
+		RefreshToken string
+		Expiry       time.Time
+		TokenType    string
+		RedirectURI  string
 	}
 	Tidal struct {
 		UserID       string
@@ -33,8 +40,14 @@ func NewConfig() {
 	viper.SetConfigType("json")
 
 	viper.SetDefault("debug", false)
+	viper.SetDefault("manual", false)
 	viper.SetDefault("spotify.client_id", "")
 	viper.SetDefault("spotify.client_secret", "")
+	viper.SetDefault("spotify.access_token", "")
+	viper.SetDefault("spotify.refresh_token", "")
+	viper.SetDefault("spotify.expiry", "")
+	viper.SetDefault("spotify.token_type", "")
+	viper.SetDefault("spotify.redirect_uri", "http://localhost:28542/callback")
 	viper.SetDefault("tidal.user_id", "")
 	viper.SetDefault("tidal.access_token", "")
 	viper.SetDefault("tidal.refresh_token", "")
