@@ -148,7 +148,7 @@ func NewService() *Service {
 		service.UserID = strconv.Itoa(int(session.UserID))
 		return &service
 	} else {
-		log.Info("No access token found in config.")
+		log.Info("No Tidal access token found in config.")
 		// Get device code for token login
 		deviceCode, err := getDeviceCode()
 		if err != nil {
