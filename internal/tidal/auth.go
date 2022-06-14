@@ -154,7 +154,8 @@ func NewService() *Service {
 		if err != nil {
 			log.Panicf("Error getting device code: %w", err)
 		}
-		fmt.Printf("Please visit %s and authorize your Tidal account.\n", deviceCode.VerificationURIComplete)
+
+		fmt.Printf("Please log in to Tidal by visiting the following page in your browser: https://%v", deviceCode.VerificationURIComplete)
 		// Start polling for sucessfull oauth login
 		for {
 			loginResponse, err := tokenLogin(deviceCode)
