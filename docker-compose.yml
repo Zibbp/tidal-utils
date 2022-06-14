@@ -3,6 +3,8 @@ services:
   tidal-utils:
     container_name: tidal-utils
     image: ghcr.io/zibbp/tidal-utils:latest
+    ports:
+      - 28542:28542
     volumes:
       - ./data:/data
       # Uncomment the below if you would like to use a custom start.sh script
