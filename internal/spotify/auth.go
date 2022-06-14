@@ -50,7 +50,7 @@ func NewService() *Service {
 	spotClientID := viper.GetString("spotify.client_id")
 	spotClientSecret := viper.GetString("spotify.client_secret")
 	redirectURI := viper.GetString("spotify.redirect_uri")
-	auth := spotifyauth.New(spotifyauth.WithClientID(spotClientID), spotifyauth.WithClientSecret(spotClientSecret), spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate))
+	auth := spotifyauth.New(spotifyauth.WithClientID(spotClientID), spotifyauth.WithClientSecret(spotClientSecret), spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate, spotifyauth.ScopePlaylistReadPrivate))
 
 	client := spotify.New(auth.Client(context.Background(), tok))
 
@@ -68,7 +68,7 @@ func auth() (*spotify.Client, error) {
 	spotClientID := viper.GetString("spotify.client_id")
 	spotClientSecret := viper.GetString("spotify.client_secret")
 	redirectURI := viper.GetString("spotify.redirect_uri")
-	auth := spotifyauth.New(spotifyauth.WithClientID(spotClientID), spotifyauth.WithClientSecret(spotClientSecret), spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate))
+	auth := spotifyauth.New(spotifyauth.WithClientID(spotClientID), spotifyauth.WithClientSecret(spotClientSecret), spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate, spotifyauth.ScopePlaylistReadPrivate))
 	// first start an HTTP server
 	http.HandleFunc("/callback", completeAuth)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -100,7 +100,7 @@ func completeAuth(w http.ResponseWriter, r *http.Request) {
 	spotClientID := viper.GetString("spotify.client_id")
 	spotClientSecret := viper.GetString("spotify.client_secret")
 	redirectURI := viper.GetString("spotify.redirect_uri")
-	auth := spotifyauth.New(spotifyauth.WithClientID(spotClientID), spotifyauth.WithClientSecret(spotClientSecret), spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate))
+	auth := spotifyauth.New(spotifyauth.WithClientID(spotClientID), spotifyauth.WithClientSecret(spotClientSecret), spotifyauth.WithRedirectURL(redirectURI), spotifyauth.WithScopes(spotifyauth.ScopeUserReadPrivate, spotifyauth.ScopePlaylistReadPrivate))
 
 	tok, err := auth.Token(r.Context(), state, r)
 	if err != nil {
