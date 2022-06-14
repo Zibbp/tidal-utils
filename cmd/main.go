@@ -126,6 +126,10 @@ func spotifyToTidal(spotifyService *spotify.Service, tidalSerivce *tidal.Service
 		var missingTracks []*spotifyPkg.PlaylistTrack
 		// Loop through Spotify playlist tracks and attempt to search on Tidal
 		for _, track := range spotifyTracks {
+			if track.Track.ID == "" {
+				log.Debug("Skipping empty track.")
+				continue
+			}
 			searchSpotifyToTidal(track, playlist.Tidal, &missingTracks, tidalSerivce)
 		}
 		// Missing tracks
