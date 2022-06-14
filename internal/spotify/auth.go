@@ -16,7 +16,7 @@ import (
 
 var (
 	ch    = make(chan *spotify.Client)
-	state = "tida-utils"
+	state = "tidal-utils"
 )
 
 type Service struct {
@@ -82,7 +82,7 @@ func auth() (*spotify.Client, error) {
 	}()
 
 	url := auth.AuthURL(state)
-	fmt.Println("Please log in to Spotify by visiting the following page in your browser:", url)
+	log.Println("Please log in to Spotify by visiting the following page in your browser:", url)
 
 	// wait for auth to complete
 	client := <-ch
