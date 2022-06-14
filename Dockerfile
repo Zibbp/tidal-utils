@@ -15,4 +15,6 @@ COPY start.sh /exec/start.sh
 
 RUN chmod +x /exec/start.sh && chmod +x app
 
+EXPOSE 28542
+
 CMD ["./exec/start.sh"]

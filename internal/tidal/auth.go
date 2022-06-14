@@ -148,13 +148,14 @@ func NewService() *Service {
 		service.UserID = strconv.Itoa(int(session.UserID))
 		return &service
 	} else {
-		log.Info("No access token found in config.")
+		log.Info("No Tidal access token found in config.")
 		// Get device code for token login
 		deviceCode, err := getDeviceCode()
 		if err != nil {
 			log.Panicf("Error getting device code: %w", err)
 		}
-		fmt.Printf("Please visit %s and authorize your Tidal account.\n", deviceCode.VerificationURIComplete)
+
+		log.Printf("Please log in to Tidal by visiting the following page in your browser: https://%v", deviceCode.VerificationURIComplete)
 		// Start polling for sucessfull oauth login
 		for {
 			loginResponse, err := tokenLogin(deviceCode)

@@ -4,39 +4,9 @@ import (
 	"context"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"github.com/zibbp/tidal-utils/internal/file"
 	"github.com/zmb3/spotify/v2"
-	spotifyauth "github.com/zmb3/spotify/v2/auth"
-	"golang.org/x/oauth2/clientcredentials"
 )
-
-type Service struct {
-	client *spotify.Client
-}
-
-func NewService() *Service {
-	log.Info("Logging into Spotify")
-	ctx := context.Background()
-	configClientId := viper.Get("spotify.client_id").(string)
-	configClientSecret := viper.Get("spotify.client_secret").(string)
-	config := &clientcredentials.Config{
-		ClientID:     configClientId,
-		ClientSecret: configClientSecret,
-		TokenURL:     spotifyauth.TokenURL,
-	}
-	token, err := config.Token(ctx)
-	if err != nil {
-		log.Fatalf("couldn't get token: %v", err)
-	}
-
-	httpClient := spotifyauth.New().Client(ctx, token)
-	client := spotify.New(httpClient)
-
-	return &Service{
-		client: client,
-	}
-}
 
 func (s *Service) GetPlaylists(playlistIds file.UserSpotifyPlaylists) ([]spotify.FullPlaylist, error) {
 	var playlists []spotify.FullPlaylist
@@ -49,6 +19,34 @@ func (s *Service) GetPlaylists(playlistIds file.UserSpotifyPlaylists) ([]spotify
 	}
 
 	return playlists, nil
+}
+
+func (s *Service) GetUsersPlaylists() ([]spotify.SimplePlaylist, error) {
+
+	playlists, err := s.client.CurrentUsersPlaylists(context.Background())
+	if err != nil {
+		log.Errorf("Couldn't get user playlists: %v", err)
+		return nil, err
+	}
+
+	allUsersPlaylists := []spotify.SimplePlaylist{}
+
+	for page := 1; ; page++ {
+		{
+			// Apend playlists
+			for _, playlist := range playlists.Playlists {
+				allUsersPlaylists = append(allUsersPlaylists, playlist)
+			}
+			err = s.client.NextPage(context.Background(), playlists)
+			if err == spotify.ErrNoMorePages {
+				break
+			}
+			if err != nil {
+				log.Errorf("Couldn't get users playlists: %v", err)
+			}
+		}
+	}
+	return allUsersPlaylists, nil
 }
 
 func (s *Service) GetPlaylist(id spotify.ID) (*spotify.FullPlaylist, error) {
