@@ -1,3 +1,7 @@
+# REPOSITORY IS ARCHIVED
+
+### Use https://github.com/Zibbp/spotify-playlist-sync instead
+
 # Tidal-Utils
 
 ### Features
